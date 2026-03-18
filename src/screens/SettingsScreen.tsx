@@ -91,26 +91,35 @@ export default function SettingsScreen({ onNavigate }: { onNavigate: (s: ScreenT
           </div>
 
           {theme === 'custom' && (
-            <div className="mt-6 pt-6 border-t border-border">
-              <h3 className="font-bold text-sm text-text-main mb-4">Custom Colors</h3>
-              <div className="space-y-3">
+            <div className="mt-8 pt-8 border-t border-border">
+              <h3 className="font-bold text-lg text-text-main mb-6">Custom Palette</h3>
+              <div className="space-y-4">
                 {[
-                  { key: 'primary', label: 'Primary Color' },
-                  { key: 'syn-text', label: 'Synonym Accent' },
-                  { key: 'ant-text', label: 'Antonym Accent' },
-                ].map(({ key, label }) => (
-                  <div key={key} className="flex items-center justify-between bg-bg-main p-3 rounded-xl border border-border">
-                    <span className="text-sm font-medium text-text-main">{label}</span>
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs text-text-sub font-mono uppercase">
+                  { key: 'primary', label: 'Primary Accent', description: 'Main brand identity' },
+                  { key: 'syn-text', label: 'Synonym Highlight', description: 'Synonym text styling' },
+                  { key: 'ant-text', label: 'Antonym Highlight', description: 'Antonym text styling' },
+                ].map(({ key, label, description }) => (
+                  <div key={key} className="flex items-center justify-between bg-bg-main p-4 rounded-2xl border border-border hover:border-primary/50 transition-all">
+                    <div>
+                      <p className="text-sm font-bold text-text-main">{label}</p>
+                      <p className="text-xs text-text-sub">{description}</p>
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <span className="text-xs text-text-sub font-mono uppercase bg-bg-card px-2 py-1 rounded-md border border-border">
                         {customThemeColors[key as keyof CustomThemeColors] || '#000000'}
                       </span>
-                      <input
-                        type="color"
-                        value={customThemeColors[key as keyof CustomThemeColors] || '#000000'}
-                        onChange={(e) => handleColorChange(key as keyof CustomThemeColors, e.target.value)}
-                        className="w-8 h-8 rounded cursor-pointer border-0 p-0 bg-transparent"
-                      />
+                      <div className="relative">
+                        <input
+                          type="color"
+                          value={customThemeColors[key as keyof CustomThemeColors] || '#000000'}
+                          onChange={(e) => handleColorChange(key as keyof CustomThemeColors, e.target.value)}
+                          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                        />
+                        <div 
+                          className="w-10 h-10 rounded-full border-2 border-white shadow-inner"
+                          style={{ backgroundColor: customThemeColors[key as keyof CustomThemeColors] || '#000000' }}
+                        />
+                      </div>
                     </div>
                   </div>
                 ))}
