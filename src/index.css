@@ -1,0 +1,93 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg-main: var(--bg-main);
+  --color-bg-card: var(--bg-card);
+  --color-text-main: var(--text-main);
+  --color-text-sub: var(--text-sub);
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
+  --color-border: var(--border);
+  --color-syn-bg: var(--syn-bg);
+  --color-syn-text: var(--syn-text);
+  --color-syn-border: var(--syn-border);
+  --color-ant-bg: var(--ant-bg);
+  --color-ant-text: var(--ant-text);
+  --color-ant-border: var(--ant-border);
+}
+
+:root {
+  /* Default Blue Theme */
+  --bg-main: #F0F4FF;
+  --bg-card: #FFFFFF;
+  --text-main: #1A2F5A;
+  --text-sub: #64748B;
+  --primary: #1A2F5A;
+  --secondary: #3B82F6;
+  --accent: #BFDBFE;
+  --border: #DBEAFE;
+  --syn-bg: #DBEAFE;
+  --syn-text: #1A2F5A;
+  --syn-border: #BFDBFE;
+  --ant-bg: #FEE2E2;
+  --ant-text: #991B1B;
+  --ant-border: #FCA5A5;
+}
+
+.theme-dark {
+  --bg-main: #0F0F1A;
+  --bg-card: #1A1A2E;
+  --text-main: #E2E8F0;
+  --text-sub: #94A3B8;
+  --primary: #6366F1;
+  --secondary: #8B5CF6;
+  --accent: #A78BFA;
+  --border: #2D2D4E;
+  --syn-bg: #1E1B4B;
+  --syn-text: #A78BFA;
+  --syn-border: #4338CA;
+  --ant-bg: #1F0F1A;
+  --ant-text: #FB7185;
+  --ant-border: #BE123C;
+}
+
+.theme-minimal {
+  --bg-main: #F5F5F7;
+  --bg-card: #FFFFFF;
+  --text-main: #1D1D1F;
+  --text-sub: #6E6E73;
+  --primary: #000000;
+  --secondary: #0071E3;
+  --accent: #E5E5EA;
+  --border: #D2D2D7;
+  --syn-bg: #EBF5FF;
+  --syn-text: #0071E3;
+  --syn-border: #C1D9F7;
+  --ant-bg: #FFF0EF;
+  --ant-text: #FF3B30;
+  --ant-border: #FFB3AF;
+}
+
+.theme-cyberpunk {
+  --bg-main: #0A0A0F;
+  --bg-card: #13131F;
+  --text-main: #00FFF5;
+  --text-sub: #7FFFF4;
+  --primary: #00FFF5;
+  --secondary: #FF00A0;
+  --accent: #FFE600;
+  --border: rgba(0, 255, 245, 0.2);
+  --syn-bg: #001A1A;
+  --syn-text: #00FFF5;
+  --syn-border: rgba(0, 255, 245, 0.4);
+  --ant-bg: #1A001A;
+  --ant-text: #FF00A0;
+  --ant-border: rgba(255, 0, 160, 0.4);
+}
+
+body {
+  background-color: #cbd5e1;
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+}
