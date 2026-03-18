@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Galada&family=Hind+Siliguri:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Bengali:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&family=Tiro+Bangla:ital@0;1&display=swap');
 @import "tailwindcss";
 
 @theme {
@@ -87,7 +88,9 @@
 }
 
 body {
-  background-color: #cbd5e1;
+  background-color: var(--bg-main, #F5F5F7);
+  color: var(--text-main, #1D1D1F);
   margin: 0;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-family, 'Inter', sans-serif);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }

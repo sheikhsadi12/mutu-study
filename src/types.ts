@@ -35,15 +35,21 @@ export interface Passage {
   savedContent: SavedContent[];
 }
 
+export type FolderVisualTheme = 'classic' | 'glass' | 'minimal' | 'color-card' | 'book-style';
+
 export interface Folder {
   id: string;
   name: string;
   emoji: string;
   color?: string;
+  visualTheme?: FolderVisualTheme;
+  gradient?: string;
   passages: Passage[];
 }
 
 export type Theme = 'blue' | 'dark' | 'minimal' | 'cyberpunk' | 'sakura' | 'custom';
+export type FontSize = 'sm' | 'base' | 'lg' | 'xl';
+export type LineSpacing = 'normal' | 'relaxed' | 'loose';
 
 export interface CustomThemeColors {
   primary?: string;

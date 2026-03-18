@@ -9,17 +9,27 @@ export default function FolderScreen({ folderId, onNavigate }: { folderId: strin
 
   const uniquePassages = Array.from(new Map(folder.passages.map(p => [p.id, p])).values());
 
+  const headerStyle: React.CSSProperties = {};
+  if (folder.gradient) {
+    headerStyle.background = folder.gradient;
+  } else if (folder.color) {
+    headerStyle.backgroundColor = folder.color;
+  }
+
   return (
     <div className="flex-1 flex flex-col h-full overflow-y-auto">
-      <div className="bg-primary p-4 sticky top-0 z-10 flex items-center gap-3 shadow-sm">
-        <button onClick={() => onNavigate('home')} className="bg-white/20 p-2 rounded-xl text-white">
+      <div 
+        className="bg-primary p-4 sticky top-0 z-10 flex items-center gap-3 shadow-sm"
+        style={headerStyle}
+      >
+        <button onClick={() => onNavigate('home')} className="bg-white/20 p-2 rounded-xl text-white backdrop-blur-sm">
           <ArrowLeft size={20} />
         </button>
         <div>
-          <h1 className="text-white text-lg font-bold flex items-center gap-2">
+          <h1 className="text-white text-lg font-bold flex items-center gap-2 drop-shadow-sm">
             <span>{folder.emoji}</span> {folder.name}
           </h1>
-          <p className="text-white/70 text-xs">{folder.passages.length}টি Passage</p>
+          <p className="text-white/90 text-xs drop-shadow-sm">{folder.passages.length}টি Passage</p>
         </div>
       </div>
 
@@ -28,7 +38,8 @@ export default function FolderScreen({ folderId, onNavigate }: { folderId: strin
           <div 
             key={p.id} 
             onClick={() => onNavigate('passage', { folderId, passageId: p.id })}
-            className="bg-bg-card border border-border rounded-2xl p-4 shadow-sm cursor-pointer hover:translate-x-1 transition-transform border-l-4 border-l-syn-text"
+            className="bg-bg-card border border-border rounded-2xl p-4 shadow-sm cursor-pointer hover:translate-x-1 transition-transform border-l-4"
+            style={{ borderLeftColor: folder.color || 'var(--primary)' }}
           >
             <div className="flex justify-between items-start mb-2">
               <div>

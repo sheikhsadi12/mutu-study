@@ -1,17 +1,27 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { Folder, Passage, Theme, ChatMessage, SavedContent } from './types';
+import { Folder, Passage, Theme, ChatMessage, SavedContent, FontSize, LineSpacing } from './types';
 
 interface AppState {
   folders: Folder[];
   theme: Theme;
+  isDarkMode: boolean;
+  fontFamily: string;
   customThemeColors: Record<string, string>;
+  fontSize: FontSize;
+  lineSpacing: LineSpacing;
   addPassageToFolder: (folderId: string, passage: Passage) => void;
   createFolder: (folder: Folder) => void;
+  updateFolder: (folderId: string, updates: Partial<Folder>) => void;
+  deleteFolder: (folderId: string) => void;
   updateChatHistory: (folderId: string, passageId: string, message: ChatMessage) => void;
   saveContent: (folderId: string, passageId: string, content: SavedContent) => void;
   setTheme: (theme: Theme) => void;
+  setIsDarkMode: (isDark: boolean) => void;
+  setFontFamily: (font: string) => void;
   setCustomThemeColors: (colors: Record<string, string>) => void;
+  setFontSize: (size: FontSize) => void;
+  setLineSpacing: (spacing: LineSpacing) => void;
 }
 
 export const useStore = create<AppState>()(
@@ -19,7 +29,11 @@ export const useStore = create<AppState>()(
     (set) => ({
       folders: [],
       theme: 'blue',
+      isDarkMode: false,
+      fontFamily: 'Inter',
       customThemeColors: {},
+      fontSize: 'sm',
+      lineSpacing: 'relaxed',
       addPassageToFolder: (folderId, passage) =>
         set((state) => ({
           folders: state.folders.map((f) => {
@@ -35,6 +49,16 @@ export const useStore = create<AppState>()(
           if (state.folders.some(f => f.id === folder.id)) return state;
           return { folders: [...state.folders, folder] };
         }),
+      updateFolder: (folderId, updates) =>
+        set((state) => ({
+          folders: state.folders.map((f) =>
+            f.id === folderId ? { ...f, ...updates } : f
+          ),
+        })),
+      deleteFolder: (folderId) =>
+        set((state) => ({
+          folders: state.folders.filter((f) => f.id !== folderId),
+        })),
       updateChatHistory: (folderId, passageId, message) =>
         set((state) => ({
           folders: state.folders.map((f) =>
@@ -66,7 +90,11 @@ export const useStore = create<AppState>()(
           ),
         })),
       setTheme: (theme) => set({ theme }),
+      setIsDarkMode: (isDark) => set({ isDarkMode: isDark }),
+      setFontFamily: (font) => set({ fontFamily: font }),
       setCustomThemeColors: (colors) => set({ customThemeColors: colors }),
+      setFontSize: (size) => set({ fontSize: size }),
+      setLineSpacing: (spacing) => set({ lineSpacing: spacing }),
     }),
     {
       name: 'mutu-study-storage',

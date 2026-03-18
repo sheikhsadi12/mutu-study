@@ -20,6 +20,8 @@ export default function App() {
   const folders = useStore(state => state.folders);
   const createFolder = useStore(state => state.createFolder);
   const theme = useStore(state => state.theme);
+  const isDarkMode = useStore(state => state.isDarkMode);
+  const fontFamily = useStore(state => state.fontFamily);
   const customThemeColors = useStore(state => state.customThemeColors);
 
   useEffect(() => {
@@ -27,7 +29,7 @@ export default function App() {
       createFolder({
         id: 'f1',
         name: 'HSC English',
-        emoji: '📚',
+        emoji: 'Book',
         passages: [SAMPLE_PASSAGE as any]
       });
     }
@@ -36,31 +38,63 @@ export default function App() {
   useEffect(() => {
     const root = document.documentElement;
     
+    // Base colors (Light Mode)
     let colors = {
-      primary: '#1A2F5A',
-      secondary: '#3B82F6',
-      accent: '#BFDBFE',
-      bg: '#F0F4FF',
-      cardBg: '#FFFFFF',
-      text: '#1A2F5A',
-      subtext: '#64748B',
-      border: '#DBEAFE',
-      synC: '#1A2F5A',
-      synBg: '#DBEAFE',
-      synBorder: '#BFDBFE',
-      antC: '#991B1B',
-      antBg: '#FEE2E2',
-      antBorder: '#FCA5A5',
+      'primary': '#1A2F5A',
+      'secondary': '#3B82F6',
+      'accent': '#BFDBFE',
+      'bg-main': '#F5F5F7',
+      'bg-card': '#FFFFFF',
+      'text-main': '#1D1D1F',
+      'text-sub': '#6E6E73',
+      'border': '#E5E5EA',
+      'syn-bg': '#DBEAFE',
+      'syn-text': '#1A2F5A',
+      'syn-border': '#BFDBFE',
+      'ant-bg': '#FEE2E2',
+      'ant-text': '#991B1B',
+      'ant-border': '#FCA5A5',
     };
 
-    if (theme === 'dark') {
-      colors = { ...colors, primary: '#6366F1', bg: '#0F0F1A', cardBg: '#1A1A2E', text: '#E2E8F0', subtext: '#94A3B8', border: '#2D2D4E', synC: '#A78BFA', synBg: '#1E1B4B', synBorder: '#4338CA', antC: '#FB7185', antBg: '#1F0F1A', antBorder: '#BE123C' };
+    // Apply Dark Mode Backgrounds
+    if (isDarkMode) {
+      colors = { 
+        ...colors, 
+        'bg-main': '#000000', 
+        'bg-card': '#1C1C1E', 
+        'text-main': '#F5F5F7', 
+        'text-sub': '#86868B', 
+        'border': '#38383A', 
+        'syn-bg': '#1E1B4B', 
+        'ant-bg': '#1F0F1A' 
+      };
+    }
+
+    // Apply Theme (Accent Colors)
+    if (theme === 'blue') {
+      colors['primary'] = isDarkMode ? '#6366F1' : '#1A2F5A';
+      colors['syn-text'] = isDarkMode ? '#A78BFA' : '#1A2F5A';
+      colors['syn-border'] = isDarkMode ? '#4338CA' : '#BFDBFE';
+      colors['ant-text'] = isDarkMode ? '#FB7185' : '#991B1B';
+      colors['ant-border'] = isDarkMode ? '#BE123C' : '#FCA5A5';
     } else if (theme === 'minimal') {
-      colors = { ...colors, primary: '#000000', bg: '#F5F5F7', cardBg: '#FFFFFF', text: '#1D1D1F', subtext: '#6E6E73', border: '#D2D2D7', synC: '#0071E3', synBg: '#EBF5FF', synBorder: '#C1D9F7', antC: '#FF3B30', antBg: '#FFF0EF', antBorder: '#FFB3AF' };
+      colors['primary'] = isDarkMode ? '#FFFFFF' : '#000000';
+      colors['syn-text'] = isDarkMode ? '#60A5FA' : '#0071E3';
+      colors['syn-border'] = isDarkMode ? '#2563EB' : '#C1D9F7';
+      colors['ant-text'] = isDarkMode ? '#F87171' : '#FF3B30';
+      colors['ant-border'] = isDarkMode ? '#DC2626' : '#FFB3AF';
     } else if (theme === 'cyberpunk') {
-      colors = { ...colors, primary: '#00FFF5', bg: '#0A0A0F', cardBg: '#13131F', text: '#00FFF5', subtext: '#7FFFF4', border: '#00FFF533', synC: '#00FFF5', synBg: '#001A1A', synBorder: '#00FFF566', antC: '#FF00A0', antBg: '#1A001A', antBorder: '#FF00A066' };
+      colors['primary'] = '#00FFF5';
+      colors['syn-text'] = '#00FFF5';
+      colors['syn-border'] = '#00FFF566';
+      colors['ant-text'] = '#FF00A0';
+      colors['ant-border'] = '#FF00A066';
     } else if (theme === 'sakura') {
-      colors = { ...colors, primary: '#BE185D', bg: '#FFF0F6', cardBg: '#FFFFFF', text: '#831843', subtext: '#9D174D', border: '#FBCFE8', synC: '#BE185D', synBg: '#FDF2F8', synBorder: '#FBCFE8', antC: '#7C3AED', antBg: '#F5F3FF', antBorder: '#DDD6FE' };
+      colors['primary'] = '#BE185D';
+      colors['syn-text'] = '#BE185D';
+      colors['syn-border'] = '#FBCFE8';
+      colors['ant-text'] = '#7C3AED';
+      colors['ant-border'] = '#DDD6FE';
     } else if (theme === 'custom') {
       colors = { ...colors, ...customThemeColors };
     }
@@ -68,7 +102,11 @@ export default function App() {
     Object.entries(colors).forEach(([key, value]) => {
       root.style.setProperty(`--${key}`, value);
     });
-  }, [theme, customThemeColors]);
+    
+    // Apply Font Family
+    root.style.setProperty('--font-family', `"${fontFamily}", sans-serif`);
+    root.style.fontFamily = `"${fontFamily}", sans-serif`;
+  }, [theme, isDarkMode, fontFamily, customThemeColors]);
 
   const navigate = (screen: ScreenType, params?: { folderId?: string, passageId?: string }) => {
     if (params?.folderId) setActiveFolderId(params.folderId);
