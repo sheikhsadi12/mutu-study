@@ -1,28 +1,21 @@
 import { Word, FontSize, LineSpacing } from '../types';
 
-const DEFAULT_SC = { bg: "#DBEAFE", border: "#BFDBFE", badge: "#1A2F5A" };
-const DEFAULT_AC = { bg: "#FEE2E2", border: "#FCA5A5", badge: "#991B1B" };
+export default function WordCard({ w, fontSize, lineSpacing }: { w: Word; fontSize: FontSize; lineSpacing: LineSpacing }) {
+  const c = w.type === "syn" 
+    ? { bg: "var(--syn-bg)", border: "var(--syn-border)", badge: "var(--syn-text)" }
+    : { bg: "var(--ant-bg)", border: "var(--ant-border)", badge: "var(--ant-text)" };
 
-export default function WordCard({ w, fontSize, lineSpacing, customColors }: { w: Word; fontSize: FontSize; lineSpacing: LineSpacing, customColors?: Record<string, string> }) {
-  const isSyn = w.type === "syn";
-  
-  const c = {
-    bg: isSyn ? (customColors?.synBg || DEFAULT_SC.bg) : (customColors?.antBg || DEFAULT_AC.bg),
-    border: isSyn ? (customColors?.synBorder || DEFAULT_SC.border) : (customColors?.antBorder || DEFAULT_AC.border),
-    badge: isSyn ? (customColors?.synC || DEFAULT_SC.badge) : (customColors?.antC || DEFAULT_AC.badge),
+  const sizeMap = {
+    sm: { id: "14px", word: "16px", pron: "12px", pos: "12px", bn: "14px", type: "10px", ex: "13px", num: "10px", item: "14px", itemPron: "12px", itemBn: "13px" },
+    base: { id: "16px", word: "18px", pron: "14px", pos: "14px", bn: "16px", type: "12px", ex: "15px", num: "12px", item: "16px", itemPron: "14px", itemBn: "15px" },
+    lg: { id: "18px", word: "22px", pron: "16px", pos: "16px", bn: "18px", type: "14px", ex: "17px", num: "14px", item: "18px", itemPron: "16px", itemBn: "17px" },
+    xl: { id: "22px", word: "26px", pron: "18px", pos: "18px", bn: "22px", type: "16px", ex: "20px", num: "16px", item: "22px", itemPron: "18px", itemBn: "20px" },
   };
-
-  const fontSizeMap = { sm: '12px', base: '14px', lg: '16px', xl: '18px' };
-  const titleSize = fontSizeMap[fontSize];
-  const pronSize = '10px';
-  const posSize = '9px';
-  const meaningSize = '11px';
-  const itemWordSize = fontSize === 'sm' ? '11px' : '13px';
-  const itemMeaningSize = '11px';
+  const s = sizeMap[fontSize] || sizeMap.base;
 
   return (
     <div style={{
-      background: "#fff", borderRadius: "10px",
+      background: "var(--bg-card)", borderRadius: "10px",
       border: `1.5px solid ${c.border}`,
       overflow: "hidden", marginBottom: "8px"
     }}>
@@ -39,35 +32,35 @@ export default function WordCard({ w, fontSize, lineSpacing, customColors }: { w
             flexWrap: "wrap", lineHeight: "1.4"
           }}>
             <span style={{
-              fontWeight: 800, fontSize: "13px",
+              fontWeight: 800, fontSize: s.id,
               color: c.badge, marginRight: "4px"
             }}>({w.id})</span>
             <span style={{
-              fontWeight: 800, fontSize: titleSize,
+              fontWeight: 800, fontSize: s.word,
               color: c.badge, marginRight: "4px"
             }}>{w.word}</span>
             <span style={{
-              fontSize: pronSize,
+              fontSize: s.pron,
               color: c.badge, marginRight: "5px"
             }}>[{w.pron}]</span>
             <span style={{
-              fontSize: posSize,
+              fontSize: s.pos,
               color: c.badge, marginRight: "5px"
             }}>{w.pos}</span>
             <span style={{
-              fontSize: posSize,
-              color: "#888", marginRight: "4px"
+              fontSize: s.pos,
+              color: "var(--text-sub)", marginRight: "4px"
             }}>—</span>
             <span style={{
-              fontSize: meaningSize,
+              fontSize: s.bn,
               fontWeight: 700, color: c.badge
             }}>{w.bn}</span>
           </div>
         </div>
         <span style={{
-          background: c.badge, color: "#fff",
+          background: c.badge, color: "var(--bg-card)",
           borderRadius: "5px", padding: "2px 6px",
-          fontSize: "9px", fontWeight: 700, flexShrink: 0
+          fontSize: s.type, fontWeight: 700, flexShrink: 0
         }}>
           {w.type === "syn" ? "SYN" : "ANT"}
         </span>
@@ -77,12 +70,12 @@ export default function WordCard({ w, fontSize, lineSpacing, customColors }: { w
       <div style={{
         padding: "5px 12px",
         borderBottom: `1px dashed ${c.border}`,
-        background: "#FAFBFF", fontSize: meaningSize,
-        color: "#555", fontStyle: "italic",
+        background: "var(--bg-main)", fontSize: s.ex,
+        color: "var(--text-sub)", fontStyle: "italic",
         lineHeight: lineSpacing === 'loose' ? '1.8' : lineSpacing === 'relaxed' ? '1.6' : '1.4'
       }}>
         ✎ {w.exEn}
-        <span style={{ color: "#999", fontStyle: "normal" }}>
+        <span style={{ color: "var(--text-sub)", fontStyle: "normal", opacity: 0.8 }}>
           {" "}({w.exBn})
         </span>
       </div>
@@ -102,7 +95,7 @@ export default function WordCard({ w, fontSize, lineSpacing, customColors }: { w
               width: "16px", height: "16px", background: c.bg,
               borderRadius: "50%", display: "flex",
               alignItems: "center", justifyContent: "center",
-              fontSize: "9px", fontWeight: 800,
+              fontSize: s.num, fontWeight: 800,
               color: c.badge, flexShrink: 0
             }}>{i + 1}</div>
 
@@ -117,16 +110,16 @@ export default function WordCard({ w, fontSize, lineSpacing, customColors }: { w
                 alignItems: "baseline", gap: "3px"
               }}>
                 <span style={{
-                  fontWeight: 700, fontSize: itemWordSize,
+                  fontWeight: 700, fontSize: s.item,
                   color: c.badge
                 }}>{it[0]}</span>
                 <span style={{
-                  fontSize: pronSize,
+                  fontSize: s.itemPron,
                   color: c.badge
                 }}>[{it[1]}]</span>
               </div>
               <span style={{
-                fontSize: itemMeaningSize, color: "#555",
+                fontSize: s.itemBn, color: "var(--text-sub)",
                 textAlign: "right", flexShrink: 0
               }}>{it[2]}</span>
             </div>

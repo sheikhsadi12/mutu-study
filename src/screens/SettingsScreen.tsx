@@ -128,8 +128,12 @@ export default function SettingsScreen({ onNavigate }: { onNavigate: (s: ScreenT
               <div className="space-y-4">
                 {[
                   { key: 'primary', label: 'Primary Accent', description: 'Main brand identity' },
-                  { key: 'syn-text', label: 'Synonym Highlight', description: 'Synonym text styling' },
-                  { key: 'ant-text', label: 'Antonym Highlight', description: 'Antonym text styling' },
+                  { key: 'syn-text', label: 'Synonym Text', description: 'Synonym text color' },
+                  { key: 'syn-bg', label: 'Synonym Background', description: 'Synonym background color' },
+                  { key: 'syn-border', label: 'Synonym Border', description: 'Synonym border color' },
+                  { key: 'ant-text', label: 'Antonym Text', description: 'Antonym text color' },
+                  { key: 'ant-bg', label: 'Antonym Background', description: 'Antonym background color' },
+                  { key: 'ant-border', label: 'Antonym Border', description: 'Antonym border color' },
                 ].map(({ key, label, description }) => (
                   <div key={key} className="flex items-center justify-between bg-bg-main p-4 rounded-2xl border border-border hover:border-primary/50 transition-all">
                     <div>
