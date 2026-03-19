@@ -91,7 +91,7 @@ export default function HomeScreen({ onNavigate }: { onNavigate: (s: ScreenType,
     return matchesFolder || matchesPassage;
   });
 
-  const renderFolderCard = (folder: Folder) => {
+  const renderFolderCard = (folder: Folder, index: number) => {
     const baseClasses = "border rounded-2xl px-4 py-3 shadow-sm cursor-pointer hover:translate-x-1 transition-transform relative flex items-center h-[80px]";
     let themeClasses = "bg-bg-card border-border border-l-4";
     let style: React.CSSProperties = { borderLeftColor: folder.color || 'var(--primary)' };
@@ -280,7 +280,7 @@ export default function HomeScreen({ onNavigate }: { onNavigate: (s: ScreenType,
           </div>
         ) : (
           <div className="flex flex-col gap-3">
-            {filteredFolders.map(renderFolderCard)}
+            {filteredFolders.map((folder) => renderFolderCard(folder, 0))}
           </div>
         )}
       </div>
