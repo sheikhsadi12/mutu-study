@@ -1,7 +1,8 @@
-import { ArrowLeft, Palette, Type, AlignLeft, Moon, Sun } from 'lucide-react';
+import { ArrowLeft, Palette, Type, AlignLeft, Moon, Sun, Plus } from 'lucide-react';
 import { useStore } from '../store';
 import { ScreenType } from '../App';
 import { Theme, CustomThemeColors } from '../types';
+import { useState } from 'react';
 
 export default function SettingsScreen({ onNavigate }: { onNavigate: (s: ScreenType, p?: any) => void }) {
   const theme = useStore(state => state.theme);
@@ -17,6 +18,8 @@ export default function SettingsScreen({ onNavigate }: { onNavigate: (s: ScreenT
   const setLineSpacing = useStore(state => state.setLineSpacing);
   const fontFamily = useStore(state => state.fontFamily);
   const setFontFamily = useStore(state => state.setFontFamily);
+
+  const [customFont, setCustomFont] = useState('');
 
   const themes: { id: Theme, name: string, icon: string, color: string }[] = [
     { id: 'blue', name: 'Classic Blue', icon: '🌊', color: '#3B82F6' },
@@ -39,6 +42,13 @@ export default function SettingsScreen({ onNavigate }: { onNavigate: (s: ScreenT
 
   const handleColorChange = (key: keyof CustomThemeColors, value: string) => {
     setCustomThemeColors({ ...customThemeColors, [key]: value });
+  };
+
+  const handleAddCustomFont = () => {
+    if (customFont.trim()) {
+      setFontFamily(customFont.trim());
+      setCustomFont('');
+    }
   };
 
   return (
@@ -143,13 +153,29 @@ export default function SettingsScreen({ onNavigate }: { onNavigate: (s: ScreenT
               <select 
                 value={fontFamily}
                 onChange={(e) => setFontFamily(e.target.value)}
-                className="w-full bg-bg-main border border-border text-text-main rounded-xl py-2.5 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all font-bold"
-                style={{ fontFamily: fontFamily }}
+                className="w-full bg-bg-main border border-border text-text-main rounded-xl py-2.5 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all font-bold mb-2"
               >
                 {fonts.map(f => (
-                  <option key={f.id} value={f.id} style={{ fontFamily: f.id }}>{f.name}</option>
+                  <option key={f.id} value={f.id}>{f.name}</option>
                 ))}
+                <option value={fontFamily}>{fontFamily}</option>
               </select>
+              
+              <div className="flex gap-2">
+                <input 
+                  type="text"
+                  value={customFont}
+                  onChange={(e) => setCustomFont(e.target.value)}
+                  placeholder="Enter custom font name"
+                  className="flex-1 bg-bg-main border border-border text-text-main rounded-xl py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"
+                />
+                <button 
+                  onClick={handleAddCustomFont}
+                  className="bg-primary text-white p-2 rounded-xl"
+                >
+                  <Plus size={20} />
+                </button>
+              </div>
             </div>
 
             <div>

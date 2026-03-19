@@ -51,10 +51,10 @@ export default function FolderScreen({ folderId, onNavigate }: { folderId: strin
             <p className="text-xs text-text-sub line-clamp-2 mb-3 italic">{p.en}</p>
             <div className="flex gap-2">
               <span className="bg-syn-bg text-syn-text text-[10px] px-2 py-1 rounded-md font-bold">
-                🔵 {p.words.filter(w => w.type === 'syn').length} SYN
+                {p.words.filter(w => w.type === 'syn').length} SYN
               </span>
               <span className="bg-ant-bg text-ant-text text-[10px] px-2 py-1 rounded-md font-bold">
-                🔴 {p.words.filter(w => w.type === 'ant').length} ANT
+                {p.words.filter(w => w.type === 'ant').length} ANT
               </span>
             </div>
           </div>
