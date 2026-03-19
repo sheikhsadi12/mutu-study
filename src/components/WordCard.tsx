@@ -1,39 +1,33 @@
-import { Volume2 } from 'lucide-react';
-import { FontSize, LineSpacing } from '../types';
+import { Word, FontSize, LineSpacing } from '../types';
 
-// Colors mapped to CSS variables for theme support
-const SC = { bg: "var(--syn-bg)", border: "var(--syn-border)", badge: "var(--syn-text)" };
-const AC = { bg: "var(--ant-bg)", border: "var(--ant-border)", badge: "var(--ant-text)" };
+const DEFAULT_SC = { bg: "#DBEAFE", border: "#BFDBFE", badge: "#1A2F5A" };
+const DEFAULT_AC = { bg: "#FEE2E2", border: "#FCA5A5", badge: "#991B1B" };
 
-export default function WordCard({ w, fontSize, lineSpacing }: { w: any, fontSize: FontSize, lineSpacing: LineSpacing }) {
-  const c = w.type === "syn" ? SC : AC;
-
-  const speak = (text: string) => {
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang = 'en-US';
-    window.speechSynthesis.speak(u);
+export default function WordCard({ w, fontSize, lineSpacing, customColors }: { w: Word; fontSize: FontSize; lineSpacing: LineSpacing, customColors?: Record<string, string> }) {
+  const isSyn = w.type === "syn";
+  
+  const c = {
+    bg: isSyn ? (customColors?.synBg || DEFAULT_SC.bg) : (customColors?.antBg || DEFAULT_AC.bg),
+    border: isSyn ? (customColors?.synBorder || DEFAULT_SC.border) : (customColors?.antBorder || DEFAULT_AC.border),
+    badge: isSyn ? (customColors?.synC || DEFAULT_SC.badge) : (customColors?.antC || DEFAULT_AC.badge),
   };
 
-  // Map settings to styles
-  const sizeMap: Record<FontSize, string> = { sm: '12px', base: '14px', lg: '16px', xl: '18px' };
-  const bnSizeMap: Record<FontSize, string> = { sm: '11px', base: '12px', lg: '14px', xl: '16px' };
-  const exSizeMap: Record<FontSize, string> = { sm: '10px', base: '11px', lg: '12px', xl: '14px' };
-  const pronSizeMap: Record<FontSize, string> = { sm: '9px', base: '10px', lg: '11px', xl: '12px' };
-  const spacingMap: Record<LineSpacing, string> = { normal: '1.4', relaxed: '1.6', loose: '1.8' };
-
-  const sz = sizeMap[fontSize];
-  const bnsz = bnSizeMap[fontSize];
-  const exsz = exSizeMap[fontSize];
-  const prsz = pronSizeMap[fontSize];
-  const sp = spacingMap[lineSpacing];
+  const fontSizeMap = { sm: '12px', base: '14px', lg: '16px', xl: '18px' };
+  const titleSize = fontSizeMap[fontSize];
+  const pronSize = '10px';
+  const posSize = '9px';
+  const meaningSize = '11px';
+  const itemWordSize = fontSize === 'sm' ? '11px' : '13px';
+  const itemMeaningSize = '11px';
 
   return (
     <div style={{
       background: "#fff", borderRadius: "10px",
-      border: `1.5px solid ${c.border}`, overflow: "hidden", marginBottom: "8px"
+      border: `1.5px solid ${c.border}`,
+      overflow: "hidden", marginBottom: "8px"
     }}>
 
-      {/* ── Header ── */}
+      {/* ── Header: (A) Forgive [ফরগিভ] Verb — ক্ষমা করা  SYN ── */}
       <div style={{
         background: c.bg, padding: "9px 12px 8px",
         display: "flex", alignItems: "center",
@@ -42,14 +36,32 @@ export default function WordCard({ w, fontSize, lineSpacing }: { w: any, fontSiz
         <div style={{ flex: 1 }}>
           <div style={{
             display: "flex", alignItems: "baseline",
-            flexWrap: "wrap", lineHeight: sp
+            flexWrap: "wrap", lineHeight: "1.4"
           }}>
-            <span style={{ fontWeight: 800, fontSize: sz, color: c.badge, marginRight: "4px" }}>({w.id})</span>
-            <span style={{ fontWeight: 800, fontSize: sz, color: c.badge, marginRight: "4px" }}>{w.word}</span>
-            <span style={{ fontSize: prsz, color: c.badge, marginRight: "5px" }}>[{w.pron}]</span>
-            <span style={{ fontSize: prsz, color: c.badge, marginRight: "5px" }}>{w.pos}</span>
-            <span style={{ fontSize: prsz, color: "#888", marginRight: "4px" }}>—</span>
-            <span style={{ fontSize: bnsz, fontWeight: 700, color: c.badge }}>{w.bn}</span>
+            <span style={{
+              fontWeight: 800, fontSize: "13px",
+              color: c.badge, marginRight: "4px"
+            }}>({w.id})</span>
+            <span style={{
+              fontWeight: 800, fontSize: titleSize,
+              color: c.badge, marginRight: "4px"
+            }}>{w.word}</span>
+            <span style={{
+              fontSize: pronSize,
+              color: c.badge, marginRight: "5px"
+            }}>[{w.pron}]</span>
+            <span style={{
+              fontSize: posSize,
+              color: c.badge, marginRight: "5px"
+            }}>{w.pos}</span>
+            <span style={{
+              fontSize: posSize,
+              color: "#888", marginRight: "4px"
+            }}>—</span>
+            <span style={{
+              fontSize: meaningSize,
+              fontWeight: 700, color: c.badge
+            }}>{w.bn}</span>
           </div>
         </div>
         <span style={{
@@ -65,8 +77,9 @@ export default function WordCard({ w, fontSize, lineSpacing }: { w: any, fontSiz
       <div style={{
         padding: "5px 12px",
         borderBottom: `1px dashed ${c.border}`,
-        background: "#FAFBFF", fontSize: exsz,
-        color: "#555", fontStyle: "italic", lineHeight: sp
+        background: "#FAFBFF", fontSize: meaningSize,
+        color: "#555", fontStyle: "italic",
+        lineHeight: lineSpacing === 'loose' ? '1.8' : lineSpacing === 'relaxed' ? '1.6' : '1.4'
       }}>
         ✎ {w.exEn}
         <span style={{ color: "#999", fontStyle: "normal" }}>
@@ -74,9 +87,9 @@ export default function WordCard({ w, fontSize, lineSpacing }: { w: any, fontSiz
         </span>
       </div>
 
-      {/* ── Items ── */}
+      {/* ── Items: Peace [পিস] left | শান্তি right ── */}
       <div style={{ padding: "6px 12px 8px" }}>
-        {w.items.map((it: any, i: number) => (
+        {w.items.map((it, i) => (
           <div key={i} style={{
             display: "flex", alignItems: "center", gap: "6px",
             padding: "4px 0",
@@ -99,12 +112,21 @@ export default function WordCard({ w, fontSize, lineSpacing }: { w: any, fontSiz
               alignItems: "center",
               justifyContent: "space-between", gap: "6px"
             }}>
-              <div style={{ display: "flex", alignItems: "baseline", gap: "3px" }}>
-                <span style={{ fontWeight: 700, fontSize: sz, color: c.badge }}>{it[0]}</span>
-                <span style={{ fontSize: prsz, color: c.badge }}>[{it[1]}]</span>
+              <div style={{
+                display: "flex",
+                alignItems: "baseline", gap: "3px"
+              }}>
+                <span style={{
+                  fontWeight: 700, fontSize: itemWordSize,
+                  color: c.badge
+                }}>{it[0]}</span>
+                <span style={{
+                  fontSize: pronSize,
+                  color: c.badge
+                }}>[{it[1]}]</span>
               </div>
               <span style={{
-                fontSize: bnsz, color: "#555",
+                fontSize: itemMeaningSize, color: "#555",
                 textAlign: "right", flexShrink: 0
               }}>{it[2]}</span>
             </div>

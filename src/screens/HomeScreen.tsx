@@ -224,7 +224,7 @@ export default function HomeScreen({ onNavigate }: { onNavigate: (s: ScreenType,
   return (
     <div className="flex-1 flex flex-col h-full overflow-y-auto pb-24 relative">
       <div className="bg-primary p-4 rounded-b-3xl shadow-md sticky top-0 z-10">
-        <div className="flex justify-between items-center mb-4 h-[69px] w-[376.273px]">
+        <div className="flex justify-between items-center mb-4 h-[69px] w-full">
           <div>
             <h1 className="text-white text-xl font-bold tracking-tight leading-none">📖 Mutu Study</h1>
             <p className="text-white/70 text-[10px] mt-1 leading-none">HSC · SSC · Admission · IELTS</p>
