@@ -1,8 +1,7 @@
-import { ArrowLeft, Palette, Type, AlignLeft, Moon, Sun, Plus } from 'lucide-react';
+import { ArrowLeft, Palette, Type, AlignLeft, Moon, Sun } from 'lucide-react';
 import { useStore } from '../store';
 import { ScreenType } from '../App';
 import { Theme, CustomThemeColors } from '../types';
-import { useState } from 'react';
 
 export default function SettingsScreen({ onNavigate }: { onNavigate: (s: ScreenType, p?: any) => void }) {
   const theme = useStore(state => state.theme);
@@ -18,8 +17,8 @@ export default function SettingsScreen({ onNavigate }: { onNavigate: (s: ScreenT
   const setLineSpacing = useStore(state => state.setLineSpacing);
   const fontFamily = useStore(state => state.fontFamily);
   const setFontFamily = useStore(state => state.setFontFamily);
-
-  const [customFont, setCustomFont] = useState('');
+  const customFontName = useStore(state => state.customFontName);
+  const setCustomFont = useStore(state => state.setCustomFont);
 
   const themes: { id: Theme, name: string, icon: string, color: string }[] = [
     { id: 'blue', name: 'Classic Blue', icon: '🌊', color: '#3B82F6' },
@@ -38,16 +37,39 @@ export default function SettingsScreen({ onNavigate }: { onNavigate: (s: ScreenT
     { id: 'Hind Siliguri', name: 'Hind Siliguri' },
     { id: 'Galada', name: 'Galada' },
     { id: 'Tiro Bangla', name: 'Tiro Bangla' },
+    { id: 'Custom', name: customFontName ? `Custom: ${customFontName}` : 'Add Custom Font...' },
   ];
 
   const handleColorChange = (key: keyof CustomThemeColors, value: string) => {
     setCustomThemeColors({ ...customThemeColors, [key]: value });
   };
 
-  const handleAddCustomFont = () => {
-    if (customFont.trim()) {
-      setFontFamily(customFont.trim());
-      setCustomFont('');
+  const handleFontChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value;
+    if (value === 'Custom' && !customFontName) {
+      // Trigger file input
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = '.ttf,.otf,.woff,.woff2';
+      input.onchange = (e) => {
+        const file = (e.target as HTMLInputElement).files?.[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            const dataUrl = event.target?.result as string;
+            // Extract font name from filename
+            const fontName = file.name.split('.')[0].replace(/[^a-zA-Z0-9]/g, ' ');
+            setCustomFont(fontName, dataUrl);
+          };
+          reader.readAsDataURL(file);
+        } else {
+          // Reset to Inter if cancelled
+          setFontFamily('Inter');
+        }
+      };
+      input.click();
+    } else {
+      setFontFamily(value);
     }
   };
 
@@ -147,35 +169,44 @@ export default function SettingsScreen({ onNavigate }: { onNavigate: (s: ScreenT
           
           <div className="space-y-6">
             <div>
-              <label className="block text-xs font-bold text-text-sub mb-2 uppercase tracking-wider flex items-center gap-1">
-                <Type size={12} /> Font Family
+              <label className="block text-xs font-bold text-text-sub mb-2 uppercase tracking-wider flex items-center justify-between">
+                <span className="flex items-center gap-1"><Type size={12} /> Font Family</span>
+                {fontFamily === 'Custom' && (
+                  <button 
+                    onClick={() => {
+                      const input = document.createElement('input');
+                      input.type = 'file';
+                      input.accept = '.ttf,.otf,.woff,.woff2';
+                      input.onchange = (e) => {
+                        const file = (e.target as HTMLInputElement).files?.[0];
+                        if (file) {
+                          const reader = new FileReader();
+                          reader.onload = (event) => {
+                            const dataUrl = event.target?.result as string;
+                            const fontName = file.name.split('.')[0].replace(/[^a-zA-Z0-9]/g, ' ');
+                            setCustomFont(fontName, dataUrl);
+                          };
+                          reader.readAsDataURL(file);
+                        }
+                      };
+                      input.click();
+                    }}
+                    className="text-primary text-[10px] bg-primary/10 px-2 py-0.5 rounded"
+                  >
+                    Change Font
+                  </button>
+                )}
               </label>
               <select 
                 value={fontFamily}
-                onChange={(e) => setFontFamily(e.target.value)}
-                className="w-full bg-bg-main border border-border text-text-main rounded-xl py-2.5 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all font-bold mb-2"
+                onChange={handleFontChange}
+                className="w-full bg-bg-main border border-border text-text-main rounded-xl py-2.5 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all font-bold"
+                style={{ fontFamily: fontFamily === 'Custom' && customFontName ? customFontName : fontFamily }}
               >
                 {fonts.map(f => (
-                  <option key={f.id} value={f.id}>{f.name}</option>
+                  <option key={f.id} value={f.id} style={{ fontFamily: f.id === 'Custom' && customFontName ? customFontName : f.id }}>{f.name}</option>
                 ))}
-                <option value={fontFamily}>{fontFamily}</option>
               </select>
-              
-              <div className="flex gap-2">
-                <input 
-                  type="text"
-                  value={customFont}
-                  onChange={(e) => setCustomFont(e.target.value)}
-                  placeholder="Enter custom font name"
-                  className="flex-1 bg-bg-main border border-border text-text-main rounded-xl py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"
-                />
-                <button 
-                  onClick={handleAddCustomFont}
-                  className="bg-primary text-white p-2 rounded-xl"
-                >
-                  <Plus size={20} />
-                </button>
-              </div>
             </div>
 
             <div>

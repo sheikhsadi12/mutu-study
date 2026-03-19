@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { ArrowLeft, Sparkles, Grid, Volume2, Type, AlignLeft, X, MoreVertical } from 'lucide-react';
 import { useStore } from '../store';
 import { ScreenType } from '../App';
-import WordCard from '../components/WordCard';
 
 export default function PassageScreen({ folderId, passageId, onNavigate }: { folderId: string, passageId: string, onNavigate: (s: ScreenType, p?: any) => void }) {
   const folder = useStore(state => state.folders.find(f => f.id === folderId));
@@ -23,13 +22,68 @@ export default function PassageScreen({ folderId, passageId, onNavigate }: { fol
   const words = passage.words.filter(w => filter === 'all' || w.type === filter);
   const uniqueWords = Array.from(new Map(words.map(w => [w.id, w])).values());
 
+  const speak = (text: string) => {
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'en-US';
+    window.speechSynthesis.speak(u);
+  };
+
   const fontSizeClasses = {
     sm: 'text-sm',
     base: 'text-base',
     lg: 'text-lg',
     xl: 'text-xl'
   };
+
+  const wordTitleSize = {
+    sm: 'text-sm',
+    base: 'text-base',
+    lg: 'text-lg',
+    xl: 'text-xl'
+  };
+
+  const wordBnSize = {
+    sm: 'text-xs',
+    base: 'text-sm',
+    lg: 'text-base',
+    xl: 'text-lg'
+  };
+
+  const wordExEnSize = {
+    sm: 'text-[10px]',
+    base: 'text-xs',
+    lg: 'text-sm',
+    xl: 'text-base'
+  };
+
+  const wordExBnSize = {
+    sm: 'text-[10px]',
+    base: 'text-[10px]',
+    lg: 'text-xs',
+    xl: 'text-sm'
+  };
+
+  const wordPronSize = {
+    sm: 'text-[10px]',
+    base: 'text-[10px]',
+    lg: 'text-xs',
+    xl: 'text-sm'
+  };
   
+  const itemEnSize = {
+    sm: 'text-[10px]',
+    base: 'text-xs',
+    lg: 'text-sm',
+    xl: 'text-base'
+  };
+  
+  const itemBnSize = {
+    sm: 'text-[10px]',
+    base: 'text-[10px]',
+    lg: 'text-xs',
+    xl: 'text-sm'
+  };
+
   const lineSpacingClasses = {
     normal: 'leading-normal',
     relaxed: 'leading-relaxed',
@@ -127,7 +181,46 @@ export default function PassageScreen({ folderId, passageId, onNavigate }: { fol
 
         <div className="flex flex-col gap-4 pb-10">
           {uniqueWords.map(w => (
-            <WordCard key={w.id} w={w} fontSize={fontSize} lineSpacing={lineSpacing} />
+            <div key={w.id} className={`bg-bg-card rounded-2xl border overflow-hidden shadow-sm ${w.type === 'syn' ? 'border-syn-border' : 'border-ant-border'}`}>
+              <div className={`p-3 flex justify-between items-center border-b ${w.type === 'syn' ? 'bg-syn-bg border-syn-border/50' : 'bg-ant-bg border-ant-border/50'}`}>
+                <div className="flex items-center gap-3">
+                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-white ${w.type === 'syn' ? 'bg-syn-text' : 'bg-ant-text'}`}>
+                    {w.id}
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h4 className={`font-bold ${wordTitleSize[fontSize]} ${w.type === 'syn' ? 'text-syn-text' : 'text-ant-text'} transition-all`}>{w.word}</h4>
+                      <button onClick={() => speak(w.word)} className={`p-1 rounded-md ${w.type === 'syn' ? 'text-syn-text' : 'text-ant-text'}`}>
+                        <Volume2 size={14} />
+                      </button>
+                    </div>
+                    <p className={`${wordPronSize[fontSize]} opacity-80 ${w.type === 'syn' ? 'text-syn-text' : 'text-ant-text'} transition-all`}>[{w.pron}] · {w.pos}</p>
+                  </div>
+                </div>
+                <span className={`text-[10px] px-2 py-1 rounded-md font-bold text-white ${w.type === 'syn' ? 'bg-syn-text' : 'bg-ant-text'}`}>
+                  {w.type === 'syn' ? 'SYN' : 'ANT'}
+                </span>
+              </div>
+              <div className="p-3">
+                <p className={`font-bold ${wordBnSize[fontSize]} ${lineSpacingClasses[lineSpacing]} text-primary mb-1 transition-all`}>{w.bn}</p>
+                <p className={`${wordExEnSize[fontSize]} ${lineSpacingClasses[lineSpacing]} text-text-main italic mb-1 transition-all`}>{w.exEn}</p>
+                <p className={`${wordExBnSize[fontSize]} ${lineSpacingClasses[lineSpacing]} font-normal text-text-sub mb-3 transition-all`}>{w.exBn}</p>
+                
+                <div className="flex flex-col gap-1">
+                  {w.items.map(([en, pron, bn], i) => (
+                    <div key={i} className={`flex items-center gap-2 p-2 rounded-lg ${w.type === 'syn' ? 'bg-syn-bg/50' : 'bg-ant-bg/50'}`}>
+                      <span className={`w-5 h-5 rounded flex items-center justify-center text-[10px] font-bold ${w.type === 'syn' ? 'bg-syn-text/10 text-syn-text' : 'bg-ant-text/10 text-ant-text'}`}>{i+1}</span>
+                      <div className="flex-1 flex items-center gap-1">
+                        <span className={`font-bold ${itemEnSize[fontSize]} text-primary transition-all`}>{en}</span>
+                        <button onClick={() => speak(en)} className="text-text-sub"><Volume2 size={12} /></button>
+                        <span className={`${wordPronSize[fontSize]} text-text-sub transition-all`}>[{pron}]</span>
+                      </div>
+                      <span className={`${itemBnSize[fontSize]} text-text-sub text-right max-w-[100px] truncate transition-all`}>{bn}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
           ))}
         </div>
       </div>

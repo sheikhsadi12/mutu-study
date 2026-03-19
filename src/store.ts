@@ -7,6 +7,8 @@ interface AppState {
   theme: Theme;
   isDarkMode: boolean;
   fontFamily: string;
+  customFontName: string | null;
+  customFontData: string | null;
   customThemeColors: Record<string, string>;
   fontSize: FontSize;
   lineSpacing: LineSpacing;
@@ -19,6 +21,7 @@ interface AppState {
   setTheme: (theme: Theme) => void;
   setIsDarkMode: (isDark: boolean) => void;
   setFontFamily: (font: string) => void;
+  setCustomFont: (name: string, data: string) => void;
   setCustomThemeColors: (colors: Record<string, string>) => void;
   setFontSize: (size: FontSize) => void;
   setLineSpacing: (spacing: LineSpacing) => void;
@@ -31,6 +34,8 @@ export const useStore = create<AppState>()(
       theme: 'blue',
       isDarkMode: false,
       fontFamily: 'Inter',
+      customFontName: null,
+      customFontData: null,
       customThemeColors: {},
       fontSize: 'sm',
       lineSpacing: 'relaxed',
@@ -92,6 +97,7 @@ export const useStore = create<AppState>()(
       setTheme: (theme) => set({ theme }),
       setIsDarkMode: (isDark) => set({ isDarkMode: isDark }),
       setFontFamily: (font) => set({ fontFamily: font }),
+      setCustomFont: (name, data) => set({ customFontName: name, customFontData: data, fontFamily: 'Custom' }),
       setCustomThemeColors: (colors) => set({ customThemeColors: colors }),
       setFontSize: (size) => set({ fontSize: size }),
       setLineSpacing: (spacing) => set({ lineSpacing: spacing }),
