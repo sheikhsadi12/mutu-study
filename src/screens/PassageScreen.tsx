@@ -172,14 +172,10 @@ export default function PassageScreen({ folderId, passageId, onNavigate }: { fol
         </div>
 
         {showPassageText && (
-          <div className="bg-bg-card border border-border rounded-2xl p-6 mb-6 shadow-md transition-all">
-            <h3 className="text-xs font-bold text-primary mb-2 uppercase tracking-wider">📄 Passage</h3>
-            <p className={`${fontSizeClasses[fontSize]} ${lineSpacingClasses[lineSpacing]} text-text-main italic mb-4 transition-all leading-relaxed`}>
-              {passage.en.replace(/^"|"$/g, '')}
-            </p>
-            <p className={`${fontSizeClasses[fontSize === 'xl' ? 'lg' : fontSize === 'lg' ? 'base' : 'sm']} ${lineSpacingClasses[lineSpacing]} text-text-sub transition-all`}>
-              {passage.bn}
-            </p>
+          <div className="bg-bg-card border border-border rounded-xl p-4 mb-4 shadow-sm transition-all">
+            <h3 className="text-xs font-bold text-primary mb-2">📄 Passage</h3>
+            <p className={`${fontSizeClasses[fontSize]} ${lineSpacingClasses[lineSpacing]} text-text-main italic mb-3 transition-all`}>{passage.en}</p>
+            <p className={`${fontSizeClasses[fontSize === 'xl' ? 'lg' : fontSize === 'lg' ? 'base' : 'sm']} ${lineSpacingClasses[lineSpacing]} text-text-sub transition-all`}>{passage.bn}</p>
           </div>
         )}
 
@@ -210,17 +206,15 @@ export default function PassageScreen({ folderId, passageId, onNavigate }: { fol
                 <p className={`${wordExEnSize[fontSize]} ${lineSpacingClasses[lineSpacing]} text-text-main italic mb-1 transition-all`}>{w.exEn}</p>
                 <p className={`${wordExBnSize[fontSize]} ${lineSpacingClasses[lineSpacing]} text-text-sub mb-3 transition-all`}>{w.exBn}</p>
                 
-                <div className="flex flex-col gap-2">
-                  {Array.isArray(w.items) && w.items.map(([en, pron, bn], i) => (
-                    <div key={`${w.id}-${i}`} className={`flex items-center justify-between p-3 rounded-xl border ${w.type === 'syn' ? 'bg-syn-bg border-syn-border' : 'bg-ant-bg border-ant-border'}`}>
-                      <div className="flex items-center gap-2">
-                        <span className={`w-6 h-6 rounded-lg flex items-center justify-center text-[10px] font-bold ${w.type === 'syn' ? 'bg-syn-text/10 text-syn-text' : 'bg-ant-text/10 text-ant-text'}`}>{i+1}</span>
-                        <div className="flex flex-col">
-                          <span className={`font-bold ${itemEnSize[fontSize]} ${w.type === 'syn' ? 'text-syn-text' : 'text-ant-text'} transition-all`}>{en}</span>
-                          <span className={`${wordPronSize[fontSize]} text-text-sub transition-all`}>[{pron}]</span>
-                        </div>
+                <div className="flex flex-col gap-1">
+                  {w.items.map(([en, pron, bn], i) => (
+                    <div key={i} className={`flex items-center gap-2 p-2 rounded-lg ${w.type === 'syn' ? 'bg-syn-bg/50' : 'bg-ant-bg/50'}`}>
+                      <span className={`w-5 h-5 rounded flex items-center justify-center text-[10px] font-bold ${w.type === 'syn' ? 'bg-syn-text/10 text-syn-text' : 'bg-ant-text/10 text-ant-text'}`}>{i+1}</span>
+                      <div className="flex-1 flex items-center gap-1">
+                        <span className={`font-bold ${itemEnSize[fontSize]} ${w.type === 'syn' ? 'text-syn-text' : 'text-ant-text'} transition-all`}>{en}</span>
+                        <button onClick={() => speak(en)} className="text-text-sub"><Volume2 size={12} /></button>
+                        <span className={`${wordPronSize[fontSize]} text-text-sub transition-all`}>[{pron}]</span>
                       </div>
-                      <button onClick={() => speak(en)} className="text-text-sub"><Volume2 size={14} /></button>
                       <span className={`${itemBnSize[fontSize]} text-text-sub text-right max-w-[100px] truncate transition-all`}>{bn}</span>
                     </div>
                   ))}

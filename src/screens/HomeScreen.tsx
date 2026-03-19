@@ -117,7 +117,7 @@ export default function HomeScreen({ onNavigate }: { onNavigate: (s: ScreenType,
 
     return (
       <div 
-        key={folder.id} 
+        key={`${folder.id}-${index}`} 
         onClick={() => onNavigate('folder', { folderId: folder.id })}
         className={`${baseClasses} ${themeClasses} ${activeFolderMenu === folder.id ? 'z-50' : 'z-0'}`}
         style={style}
@@ -280,7 +280,7 @@ export default function HomeScreen({ onNavigate }: { onNavigate: (s: ScreenType,
           </div>
         ) : (
           <div className="flex flex-col gap-3">
-            {filteredFolders.map((folder) => renderFolderCard(folder, 0))}
+            {filteredFolders.map((folder, index) => renderFolderCard(folder, index))}
           </div>
         )}
       </div>
